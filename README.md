@@ -83,7 +83,42 @@ flutter pub get
 flutter run
 ```
 
-La dirección del backend se configura en el archivo de configuración de la app.
+### Configuración de la API
+
+La dirección del backend se define con `--dart-define=API_URL=...` (en `lib/config/config_api.dart`). Si no se indica:
+
+| Plataforma | URL por defecto |
+| --- | --- |
+| Web y Windows | `http://localhost:3000/api` |
+| Emulador de Android | `http://10.0.2.2:3000/api` (el emulador ve así el `localhost` del PC) |
+
+Teléfono real: `flutter run --dart-define=API_URL=http://<IP-LAN-del-PC>:3000/api`. El backend escucha en `HOST=0.0.0.0`; hay que permitir el puerto 3000 en el firewall de Windows. En desarrollo (debug y profile) Android permite `http://`; en release se exigirá HTTPS.
+
+### Probar en el navegador (Chrome o Edge)
+
+1. Inicie el backend (`npm run dev` en `App_DistriGo_Backen`). Su `.env` debe incluir el origen de la app web: `CORS_ORIGENES=http://localhost:5173,http://localhost:5175` (reinicie el backend si lo cambia).
+2. En esta carpeta: `flutter run -d chrome --web-port 5175` (o `-d edge`). El puerto 5175 es fijo para que coincida con CORS.
+3. Para ver el tamaño de un teléfono, abra las herramientas de desarrollo (F12) y active la vista de dispositivo (por ejemplo 390x844).
+
+Flutter web sirve solo para desarrollo y pruebas; el producto objetivo es Android. En web, `flutter_secure_storage` usa WebCrypto y `localStorage`.
+
+### Windows de escritorio
+
+`flutter run -d windows` exige activar el Modo de desarrollador de Windows (los plugins necesitan enlaces simbólicos). Hasta entonces use Chrome o Edge.
+
+### Pruebas
+
+```bash
+flutter analyze
+flutter test --exclude-tags integracion          # unitarias y de widgets
+flutter test --tags integracion                  # contra el backend real (debe estar en marcha)
+```
+
+Las pruebas de integración leen las credenciales `TEST_REPARTIDOR_*` y `TEST_ADMIN_*` del `.env` del backend (o de las variables `E2E_*`) y no las imprimen.
+
+### Alcance actual (Módulo 1)
+
+Inicio de sesión del repartidor (la app rechaza cuentas de administrador), cierre de sesión, cierre automático por inactividad (el límite lo entrega el backend, 30 minutos por defecto) y una pantalla provisional "Mi ruta de hoy". La contraseña nunca se guarda; el token se guarda con `flutter_secure_storage`.
 
 ## Documentación
 

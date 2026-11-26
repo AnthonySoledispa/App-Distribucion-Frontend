@@ -1,0 +1,4 @@
+tags:
+  integracion:
+    # Pruebas contra el backend real: flutter test --tags integracion
+    # Por defecto se omiten: flutter test --exclude-tags integracion

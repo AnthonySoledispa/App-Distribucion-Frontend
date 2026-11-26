@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- INTERNET es necesario en desarrollo (hot reload, depuración). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Solo en profile: permite http:// hacia el backend local. En release se exigirá HTTPS. -->
+    <application android:usesCleartextTraffic="true"/>
+</manifest>
